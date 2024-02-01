@@ -1,0 +1,355 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <script>window.onerror = function(message, source, lineno, colno, error) {
+                log(`${message} at line ${lineno}:${colno}`);
+            }</script>
+        <title>This is a website</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lugrasimo&display=swap" rel="stylesheet">
+        <style>
+            .lugrasimo-regular {
+              font-family: "Lugrasimo", cursive;
+              font-weight: 400;
+              font-style: normal;
+            }
+
+            input {
+                font-family: arial;
+                width: 25%;
+                margin-right: 75%;
+                margin-bottom: 5px;
+                margin-top: 5px;
+            }
+            h2 {
+                margin: 0px;
+                padding: 0px;                
+            }
+            textarea {
+                font-family: arial;
+                width: 75%;
+                height: 300px;
+                margin-right: 50%;
+                resize: none;
+            }
+            body {
+                background-color: bisque;
+                font-family: verdana;
+                font-size: 14px;
+            }
+            button {
+                font-size: 15px;
+            }
+            #canvas {
+                border: 1px solid black;
+                background-color: white;
+                float: left;
+            }
+            #toolbar {
+                width: 100%;
+                height: auto;
+                background-color: bisque;
+            }
+            #toolbar button {
+                border: none;
+                background-color: bisque;
+                border-right: 1px solid black;
+                margin: 0;
+            }
+            button {
+                border: none;
+                background-color: bisque;
+                border-right: 1px solid black;
+                margin: 0;
+            }
+            button:hover {
+                background-color: burlywood;
+            }
+            #toolbar button:hover {
+                background-color: burlywood;
+            }
+            #editMenu {
+                width: 200px;
+                height: 400px;
+                background-color: darkgrey;
+                float: left;
+                border: 1px solid black;
+            }
+            #editMenu button {
+                background-color: darkgrey;
+                border: none;
+                border-right: 1px solid black;
+                margin: 0;
+            }
+            #editMenu h3 {
+                margin: 0px;
+                padding: none;
+            }
+            #editMenu button:hover {
+                background-color: dimgrey;
+
+            }
+            #bottombar {
+                width: 100%;
+                display: block;
+                top: 450px;
+                position: absolute;
+            }
+            #objects {
+                border-top: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+            .scrnobj {
+                width: 200px;
+                background-color: darkgrey;
+                border-right: none;
+                margin: 0;
+                text-align: left;
+            }
+            #alert {
+                z-index: 4;
+                margin-left: 26%;
+                position: fixed;
+                background-color: lightgrey;
+                color: Red;
+                border-radius: 5px;
+                width: 50%;
+                height: 50px;
+                text-align: center;
+                visibility: hidden;
+            }
+            .intro {
+                animation-name: dointro;
+                animation-duration: 4s;
+                margin-top: 0vh;
+            }
+            @keyframes dointro {
+                from {
+                    color: bisque;
+                    margin-top: 90vh;
+                }
+                to {
+                    color: black;
+                    margin-top: 0vh;
+                }
+            }
+            input {
+                border: none;
+                background-color: bisque;
+                color: black
+            }
+            input:focus {
+                outline: none;
+                border-bottom: 1px solid black;
+            } 
+        </style>
+    </head>
+    <body>
+        <div id="onstart" class="lugrasimo-regular"></div>
+        <input id="projectname" placeholder="First, name your location"></input>
+        <div id="toolbar">
+            <button id="tb1" onclick="setMode(1)">Page 1</button>
+            <button id="tb2" onclick="setMode(2)">Page 2</button>
+            <button id="tb3" onclick="setMode(3)">Page 3</button>
+            <button id="tb4" onclick="setMode(4)">Page 4</button>
+            <button id="tb5" onclick="setMode(5)">Page 5</button>
+            <button id="tb6" onclick="setMode(6)">About</button>
+            <button id="tb1" onclick="reset()">reset</button>
+        </div>
+        <div id="alert"></div>
+        <div id="wrt">
+            
+        </div>
+        <div id="log"></div>
+        
+        <script>
+            init()
+            function init()
+            {
+                document.getElementById("onstart").innerHTML  = `
+                <h1 class="intro">Welcome to World-Wheelbarrow!<br>
+                Let's get started.</h1>
+                `
+                document.getElementById("toolbar").style.visibility = "hidden"
+                document.getElementById("projectname").style.visibility = "hidden"
+                setTimeout(()=>{
+                    
+                    document.getElementById("projectname").style.visibility = "visible"
+                    document.getElementById("projectname").focus()
+                    window.addEventListener("mousedown",()=>{
+                        setTimeout(()=>{document.getElementById("projectname").focus()})
+                    })
+                    document.getElementById("projectname").addEventListener("keyup",(e)=>{
+                        if(e.key == "Enter")
+                        {
+                            if(document.getElementById("projectname").value != "")
+                            {
+                                
+                            }
+                        }
+                    })
+                },4000)
+                
+            }
+            let DATA = ["",[],"",[],[],""]
+            function reset()
+            {
+                DATA = ["",[],"",[],[],""]
+            }
+            let MODE = 1
+            window.onerror = function(message, source, lineno, colno, error) {
+                log(`${message} at line ${lineno}:${colno}`);
+            }
+            var instructions = [
+            "<em>This page will contain background information on your location</em>",
+            "<em>Here describe some people who live in your location</em>",
+            "<em>Here describe where this location is relative to the rest of your world</em>",
+            "<em>Here, add a few adventure hooks!</em>",
+            "<em>Here, add places within your location (buildings, monuments, other points of interest to the unwary traveler)</em>",
+            "<em>This is a short description of you</em>"]
+            function setMode(mode)
+            {
+                for(let i = 1; i<7; i++)
+                {
+                    if(i==mode)
+                    {
+                        document.getElementById(`tb${i}`).style.background = "burlywood"
+                    }
+                    else
+                    {
+                        document.getElementById(`tb${i}`).style.background = "bisque"
+                    }
+                }
+                MODE = mode
+                let page = document.getElementById("wrt")
+                if(Array.isArray(DATA[mode-1]))
+                {
+                    page.innerHTML = instructions[mode-1]+"<input id='inpt'></input><textarea id='txtarea'></textarea><button id='add' onclick='add()'>Add to list</button><br>"
+                    setTimeout(()=>{document.getElementById("inpt").focus()},30)
+                }
+                else
+                {
+                    page.innerHTML = instructions[mode-1]+"<textarea id='txtarea'></textarea>"
+                    setTimeout(()=>{
+                        document.getElementById("txtarea").focus()
+                        
+                        document.getElementById("txtarea").addEventListener("keyup",()=>{
+                            DATA[mode-1] = document.getElementById("txtarea").value
+                            //log(DATA[mode-1])
+                        })
+                        body
+                        
+                    },30)
+                }
+                let data_input = DATA[mode-1]
+                //log("data: "+data_input)
+                //log(JSON.stringify(data_input))
+                if(!Array.isArray(data_input))
+                {
+                    document.getElementById("txtarea").value = data_input
+                    return
+                }
+                if(data_input.length == 0)
+                {
+                    page.innerHTML += "<em>You have not yet added any content :(</em>"
+                    return
+                }
+                for(let i = 0; i<data_input.length; i++)
+                {
+                    page.innerHTML += `<div style="width: 100%; border-top: 1px solid black;"></div><button onclick = "moveup(${i})">Move up</button><button onclick="movedown(${i})">Move down</button><button onclick="remove(${i})">Remove</button><button>Edit</button>`
+                    const newHeader = document.createElement("h2")
+                    let content = document.createTextNode(data_input[i]["head"])
+                    newHeader.appendChild(content)
+                    page.appendChild(newHeader)
+                    const newText = document.createElement("p")
+                    content = document.createTextNode(data_input[i]["body"])
+                    newText.appendChild(content)
+                    page.appendChild(newText)
+                    page.innerHTML += "</div>"
+                    //log(data_input[i]["body"])
+                }
+
+            }
+            function log(str)
+            {
+               document.getElementById("log").innerHTML += str+"<br>"
+            }
+            function add()
+            {
+                document.getElementById("alert").innerHTML = ""
+                if(document.getElementById("inpt").value=="")
+                {
+                    document.getElementById("alert").style.visibility = "visible"
+                    document.getElementById("alert").innerHTML += "oh noes! You don't have a title<br>"
+                }
+                if(document.getElementById("txtarea").value=="")
+                {
+                    document.getElementById("alert").style.visibility = "visible"
+                    document.getElementById("alert").innerHTML += "oh noes! You don't have any text"
+                }
+                setTimeout(()=>{
+                    document.getElementById("alert").style.visibility = "hidden"
+                }, 1500)
+                if(document.getElementById("inpt").value=="" ||document.getElementById("txtarea").value=="")
+                {
+                    return
+                }
+                //log("hi")
+                DATA[MODE-1].push({"head": document.getElementById("inpt").value, "body": document.getElementById("txtarea").value})
+                setMode(MODE)   
+            }
+            function moveup(item){
+                if(item<1)
+                {
+                    return
+                }
+                let temp = DATA[MODE-1][item]
+                let temp2 = DATA[MODE-1][item-1]
+                DATA[MODE-1][item] = temp2
+                DATA[MODE-1][item-1] = temp
+                setMode(MODE)
+            }
+            function movedown(item)
+            {
+                if(item>DATA[MODE-1].length-2)
+                {
+                    return
+                }
+                let temp = DATA[MODE-1][item]
+                let temp2 = DATA[MODE-1][item+1]
+                DATA[MODE-1][item] = temp2
+                DATA[MODE-1][item+1] = temp
+                setMode(MODE)
+            }
+            function remove(item)
+            {
+                DATA[MODE-1].splice(item,1)
+                setMode(MODE)
+            }
+            function exportfile() {
+                // exports file based on file name and type given and text given
+                var element = document.createElement('a');
+                element.setAttribute('href','data:text/plain;charset=utf-8, '+ encodeURIComponent(JSON.stringify(scrndata)));
+                element.setAttribute('download', document.getElementById("name").value+".ddraw");
+                element.style.display = "none";
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+            }
+            
+            function importfile() {
+                var fileToLoad = document.getElementById("import").files[0];
+                var fileReader = new FileReader();
+                fileReader.onload = function(fileLoadedEvent){
+                    var textFromFileLoaded = fileLoadedEvent.target.result;
+                    document.getElementById("name").value = document.getElementById("import").value.substring(12,document.getElementById("import").value.lastIndexOf('.'))
+                    document.getElementById("name").blur()
+                    scrndata = JSON.parse(textFromFileLoaded)
+                    updateScreen()
+                };
+                fileReader.readAsText(fileToLoad, "UTF-8");
+            }
+        </script>
+    </body>
+</html>
