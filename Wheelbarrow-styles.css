@@ -1,0 +1,102 @@
+body {
+    background-color: bisque;
+    font-family: verdana;
+    font-size: 14px;
+}
+button {
+    font-size: 15px;
+}
+.scrnobj:hover {
+    background-color: darkgrey;
+}
+#canvas {
+    border: 1px solid black;
+    background-color: white;
+    float: left;
+}
+#toolbar {
+    width: 100%;
+    height: auto;
+    background-color: bisque;
+}
+#toolbar button {
+    border: none;
+    background-color: bisque;
+    border-right: 1px solid black;
+    margin: 0;
+    
+}
+#bottombar button {
+    border: none;
+    background-color: bisque;
+    border-right: 1px solid black;
+    margin: 0;
+}
+#bottombar button:hover {
+    background-color: burlywood;
+}
+#toolbar button:hover {
+    background-color: burlywood;
+}
+#DDraw-editMenu {
+    width: 200px;
+    height: 400px;
+    background-color: darkgrey;
+    float: left;
+    border: 1px solid black;
+}
+#DDraw-editMenu button {
+    background-color: darkgrey;
+    border: none;
+    border-right: 1px solid black;
+    margin: 0;
+}
+#DDraw-editMenu h3 {
+    margin: 0px;
+    padding: none;
+}
+#DDraw-editMenu button:hover {
+    background-color: dimgrey;
+
+}
+#bottombar {
+    width: 100%;
+    display: block;
+    top: 490px;
+    position: absolute;
+}
+#objects {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+.scrnobj {
+    width: 200px;
+    background-color: darkgrey;
+    border-right: none;
+    margin: 0;
+    text-align: left;
+}
+#upload_file {
+    visibility: hidden;
+    
+}
+#import::file-selector-button {
+    visibility: none;
+}
+
+.main-header {
+    font-family: lugrasimo;
+    margin: 0;
+    padding: 0;
+    height: 70;
+}
+#lbl {
+    font-size: 14px;
+    border: none;
+    background-color: bisque;
+    border-right: 1px solid black;
+    margin: 0;
+}
+#lbl:hover{
+    background-color: burlywood;
+}
