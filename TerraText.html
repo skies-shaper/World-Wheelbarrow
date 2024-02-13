@@ -142,7 +142,33 @@
             input:focus {
                 outline: none;
                 border-bottom: 1px solid black;
+                animation-name: inputfocus;
+                animation-duration: 1s;
+                background-color: burlywood;
+
             } 
+            #projectname {
+                min-width: 200;
+            }
+            input:hover{
+            }
+            input:after {
+              content: "";
+              background: black;
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              height: 1px;
+              width: 100%;
+            }
+            @keyframes inputfocus {
+                from {
+                    background-color: bisque;
+                }
+                to {
+                    background-color: burlywood;
+                }
+            }
         </style>
     </head>
     <body>
@@ -156,6 +182,11 @@
             <button id="tb5" onclick="setMode(5)">Page 5</button>
             <button id="tb6" onclick="setMode(6)">About</button>
             <button id="tb1" onclick="reset()">reset</button>
+            <button onclick="save()">Save</button>
+            <button onclick="load()">Load</button>
+            <input id="import" type="file" onchange="importfile()" hidden>
+            <label id="lbl" for="import">load</label>
+
         </div>
         <div id="alert"></div>
         <div id="wrt">
@@ -177,20 +208,26 @@
                     
                     document.getElementById("projectname").style.visibility = "visible"
                     document.getElementById("projectname").focus()
-                    window.addEventListener("mousedown",()=>{
-                        setTimeout(()=>{document.getElementById("projectname").focus()})
-                    })
+                    window.addEventListener("mousedown",focusPName)
                     document.getElementById("projectname").addEventListener("keyup",(e)=>{
                         if(e.key == "Enter")
                         {
                             if(document.getElementById("projectname").value != "")
                             {
-                                
+                                document.getElementById("projectname").blur()
+                                setMode(1)
+                                document.getElementById("toolbar").style.visibility = "visible"
+                                document.getElementById("onstart").innerHTML + ""
+                                window.removeEventListener("mousedown",focusPName)
                             }
                         }
                     })
                 },4000)
                 
+            }
+            function focusPName()
+            {
+                setTimeout(()=>{document.getElementById("projectname").focus()})
             }
             let DATA = ["",[],"",[],[],""]
             function reset()
@@ -225,7 +262,7 @@
                 let page = document.getElementById("wrt")
                 if(Array.isArray(DATA[mode-1]))
                 {
-                    page.innerHTML = instructions[mode-1]+"<input id='inpt'></input><textarea id='txtarea'></textarea><button id='add' onclick='add()'>Add to list</button><br>"
+                    page.innerHTML = instructions[mode-1]+"<input id='inpt'placeholder='Name'></input><textarea id='txtarea'></textarea><button id='add' onclick='add()'>Add to list</button><br>"
                     setTimeout(()=>{document.getElementById("inpt").focus()},30)
                 }
                 else
@@ -238,7 +275,7 @@
                             DATA[mode-1] = document.getElementById("txtarea").value
                             //log(DATA[mode-1])
                         })
-                        body
+                        //body
                         
                     },30)
                 }
@@ -257,7 +294,7 @@
                 }
                 for(let i = 0; i<data_input.length; i++)
                 {
-                    page.innerHTML += `<div style="width: 100%; border-top: 1px solid black;"></div><button onclick = "moveup(${i})">Move up</button><button onclick="movedown(${i})">Move down</button><button onclick="remove(${i})">Remove</button><button>Edit</button>`
+                    page.innerHTML += `<div style="width: 100%; border-top: 1px solid black;"></div><button onclick = "moveup(${i})">Move up</button><button onclick="movedown(${i})">Move down</button><button onclick="remove(${i})">Remove</button><button onclick = "edit(${i})">Edit</button>`
                     const newHeader = document.createElement("h2")
                     let content = document.createTextNode(data_input[i]["head"])
                     newHeader.appendChild(content)
@@ -271,22 +308,35 @@
                 }
 
             }
+            function edit(item)
+            {
+                add()
+                let tempBody, tempInpt
+                tempBody = DATA[MODE-1][item]["body"] 
+                tempInpt = DATA[MODE-1][item]["head"] 
+                remove(item)
+                document.getElementById("txtarea").value = tempBody
+                document.getElementById("inpt").value = tempInpt
+            }
             function log(str)
             {
                document.getElementById("log").innerHTML += str+"<br>"
             }
             function add()
             {
+                if(document.getElementById("inpt").value ==""&& document.getElementById("txtarea").value =="")
+                {
+                    return
+                }
                 document.getElementById("alert").innerHTML = ""
                 if(document.getElementById("inpt").value=="")
                 {
-                    document.getElementById("alert").style.visibility = "visible"
-                    document.getElementById("alert").innerHTML += "oh noes! You don't have a title<br>"
+                    document.getElementById("inpt").value = "Untitled"
+
                 }
                 if(document.getElementById("txtarea").value=="")
                 {
-                    document.getElementById("alert").style.visibility = "visible"
-                    document.getElementById("alert").innerHTML += "oh noes! You don't have any text"
+                    document.getElementById("txtarea").value = "No content given"
                 }
                 setTimeout(()=>{
                     document.getElementById("alert").style.visibility = "hidden"
@@ -327,26 +377,26 @@
                 DATA[MODE-1].splice(item,1)
                 setMode(MODE)
             }
-            function exportfile() {
+            function save() {
                 // exports file based on file name and type given and text given
                 var element = document.createElement('a');
-                element.setAttribute('href','data:text/plain;charset=utf-8, '+ encodeURIComponent(JSON.stringify(scrndata)));
-                element.setAttribute('download', document.getElementById("name").value+".ddraw");
+                element.setAttribute('href','data:text/plain;charset=utf-8, '+ encodeURIComponent(JSON.stringify(DATA)));
+                element.setAttribute('download', document.getElementById("projectname").value+".ttext");
                 element.style.display = "none";
                 document.body.appendChild(element);
                 element.click();
                 document.body.removeChild(element);
             }
             
-            function importfile() {
+            function load() {
                 var fileToLoad = document.getElementById("import").files[0];
                 var fileReader = new FileReader();
                 fileReader.onload = function(fileLoadedEvent){
                     var textFromFileLoaded = fileLoadedEvent.target.result;
-                    document.getElementById("name").value = document.getElementById("import").value.substring(12,document.getElementById("import").value.lastIndexOf('.'))
+                    document.getElementById("projectname").value = document.getElementById("import").value.substring(12,document.getElementById("import").value.lastIndexOf('.'))
                     document.getElementById("name").blur()
-                    scrndata = JSON.parse(textFromFileLoaded)
-                    updateScreen()
+                    DATA = JSON.parse(textFromFileLoaded)
+                    setMode(1)
                 };
                 fileReader.readAsText(fileToLoad, "UTF-8");
             }
