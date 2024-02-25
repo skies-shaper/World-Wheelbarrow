@@ -100,7 +100,7 @@
                 let page = document.getElementById("wrt")
                 if(Array.isArray(DATA[mode-1]))
                 {
-                    page.innerHTML = instructions[mode-1]+"<input id='inpt'placeholder='Name'></input><textarea id='txtarea'></textarea><button id='add' onclick='add()'>Add to list</button><br>"
+                    page.innerHTML = instructions[mode-1]+"<input id='inpt'placeholder='Name'></input><br><textarea id='txtarea'></textarea><button id='add' onclick='add()'>Add to list</button><br>"
                     setTimeout(()=>{document.getElementById("inpt").focus()},30)
                 }
                 else
