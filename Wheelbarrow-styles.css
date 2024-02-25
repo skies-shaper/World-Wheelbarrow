@@ -133,11 +133,14 @@ button {
     border-right: 1px solid black;
     margin: 0
 }
+#toolbar button:hover {
+    background-color: burlywood;
+}
 
 #bottombar {
     width: 100%;
     display: block;
-    top: 450px;
+    top: 510px;
     position: absolute
 }
 
